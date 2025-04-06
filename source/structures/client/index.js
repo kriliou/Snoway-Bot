@@ -1,55 +1,42 @@
-const { Client, Collection, Routes } = require("discord.js");
-const fs = require("fs");
-const version = require('../../../version')
-const { QuickDB } = require("quick.db")
-const { REST } = require('@discordjs/rest');
-const { readdirSync } = require('fs');
-const db = new QuickDB();
-const { Player } = require('discord-player');
-const { DefaultWebSocketManagerOptions: { identifyProperties } } = require("@discordjs/ws");
-identifyProperties.browser = "Discord Android"
+constructor(
+  options = {
+    intents: [3276799],
+    partials: [1, 2, 5, 3, 4, 6, 0],
+  }
+) {
+  super(options);
+  this.setMaxListeners(0);
 
+  this.commands = new Collection();
+  this.aliases = new Collection();
+  this.slashCommands = new Collection();
+  this.context = new Collection();
+  this.invites = new Map();
+  this.vanityURL = new Map();
+  this.SnipeMsg = new Map();
+  this.SnipeMention = new Map();
+  this.SnipeEdit = new Map();
+  this.player = Player.singleton(this);
+  this.player.extractors.loadDefault();
 
-module.exports = class Snoway extends Client {
-  constructor(
-    options = {
-      intents: [3276799],
-      partials: [
-        1, 2, 5, 3,
-        4, 6, 0
-      ],
-    }
-  ) {
-    super(options);
-    this.setMaxListeners(0);
+  this.functions = require('../Functions/index')
+  this.utils = require('../Utils/index')
+  this.config = require('../../../config/config');
 
-    this.commands = new Collection();
-    this.aliases = new Collection();
-    this.slashCommands = new Collection()
-    this.context = new Collection()
-    this.invites = new Map();
-    this.vanityURL = new Map()
-    this.SnipeMsg = new Map();
-    this.SnipeMention = new Map();
-    this.SnipeEdit = new Map();
-    this.player = Player.singleton(this);
-    this.player.extractors.loadDefault();
+  this.support = 'https://discord.gg/snoway'
+  this.footer = { text: "Snoway V3 by Sown & Inside" }
+  this.dev = ["798973949189947459", "233657223190937601"],
+  this.version = version;
+  this.db = db
+  this.api = this.functions.api
 
-    this.functions = require('../Functions/index')
-    this.utils = require('../Utils/index')
-    this.config = require('../../../config/config');
+  this.keepAlive(); // <---- ICI
+  this.CommandLoad();
+  this.EventLoad();
+  this.connect()
+  this.slashEvent()
 
-    this.support = 'https://discord.gg/snoway'
-    this.footer = {text: "Snoway V3 by Sown & Inside"}
-    this.dev = ["798973949189947459", "233657223190937601"],
-    this.version = version;
-    this.db = db
-    this.api = this.functions.api
-
-    this.CommandLoad();
-    this.EventLoad();
-    this.connect()
-    this.slashEvent()
+  // ...
 
     this.lang = async function (key, guildId) {
       return new Promise(async (resolve, reject) => {
