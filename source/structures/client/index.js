@@ -167,7 +167,21 @@ constructor(
           process.on(event.name, eventHandler);
         }
 
-        console.log(`EVENT chargé : ${eventFile}`);
+        console.log(`EVENT chargé : $
+
+{eventFile};keepAlive() {
+  const express = require("express");
+  const app = express();
+
+  app.get("/", (req, res) => {
+    res.send("Bot is alive");
+  });
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`KeepAlive web server running on port ${PORT}`);
+  });
+}
       }
     }
   }
